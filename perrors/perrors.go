@@ -5,7 +5,7 @@ type Error struct {
 	status int
 }
 
-func NewError(msg string, status int) error {
+func New(msg string, status int) error {
 	return &Error{
 		msg:    msg,
 		status: status,
