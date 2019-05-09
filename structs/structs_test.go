@@ -127,48 +127,6 @@ func TestGetTagsForJSONAndIgnoreCertainFields(t *testing.T) {
 	}
 }
 
-func TestGetTagsAndValuesForDB(t *testing.T) {
-	id := uuid.NewV4()
-	now := time.Now()
-
-	expectedTags := []string{"id", "this", "is", "used", "for", "testing", "create_date", "update_date"}
-	var expectedValues []interface{}
-	expectedValues = append(expectedValues, id, "yo", "are", int32(1), float32(2.0), int64(123456789), now, now)
-
-	gotTags, gotValues := GetTagsAndValues(createStruct(id, now), "db", nil, nil)
-	if (len(gotTags) != len(expectedTags)) || (len(gotValues) != len(expectedValues)) {
-		t.Fatalf("GetTagsAndValues() = %v, %v, want %v %v", gotTags, gotValues, expectedTags, expectedValues)
-	}
-
-	for i := range gotTags {
-		if (gotTags[i] != expectedTags[i]) || (gotValues[i] != expectedValues[i]) {
-			fmt.Println(gotTags[i], expectedTags[i], gotValues[i], expectedValues[i])
-			t.Fatalf("GetTagsAndValues() = %v, %v, want %v %v", gotTags, gotValues, expectedTags, expectedValues)
-		}
-	}
-}
-
-func TestGetTagsAndValuesForDBAndIgnoreCertainFields(t *testing.T) {
-	id := uuid.NewV4()
-	now := time.Now()
-
-	expectedTags := []string{"id", "this", "is", "for", "testing", "update_date"}
-	var expectedValues []interface{}
-	expectedValues = append(expectedValues, id, "yo", "are", float32(2.0), int64(123456789), now)
-
-	gotTags, gotValues := GetTagsAndValues(createStruct(id, now), "db", []string{"used", "create_date"}, nil)
-	if (len(gotTags) != len(expectedTags)) || (len(gotValues) != len(expectedValues)) {
-		t.Fatalf("GetTagsAndValues() = %v, %v, want %v %v", gotTags, gotValues, expectedTags, expectedValues)
-	}
-
-	for i := range gotTags {
-		if (gotTags[i] != expectedTags[i]) || (gotValues[i] != expectedValues[i]) {
-			fmt.Println(gotTags[i], expectedTags[i], gotValues[i], expectedValues[i])
-			t.Fatalf("GetTagsAndValues() = %v, %v, want %v %v", gotTags, gotValues, expectedTags, expectedValues)
-		}
-	}
-}
-
 func TestGetTagsAndValuesForJSON(t *testing.T) {
 	id := uuid.NewV4()
 	now := time.Now()
@@ -177,7 +135,7 @@ func TestGetTagsAndValuesForJSON(t *testing.T) {
 	var expectedValues []interface{}
 	expectedValues = append(expectedValues, id, "yo", "are", int32(1), float32(2.0), int64(123456789), now, now)
 
-	gotTags, gotValues := GetTagsAndValues(createStruct(id, now), "json", nil, nil)
+	gotTags, gotValues := GetTagsAndValues(createStruct(id, now), "json", nil)
 	if (len(gotTags) != len(expectedTags)) || (len(gotValues) != len(expectedValues)) {
 		t.Fatalf("GetTagsAndValues() = %v, %v, want %v %v", gotTags, gotValues, expectedTags, expectedValues)
 	}
@@ -190,7 +148,70 @@ func TestGetTagsAndValuesForJSON(t *testing.T) {
 	}
 }
 
-func TestGetTagsAndValuesForJSONWithNestedStructAndIgnoreCertainFields(t *testing.T) {
+func TestGetNestedTagsAndValuesForDB(t *testing.T) {
+	id := uuid.NewV4()
+	now := time.Now()
+
+	expectedTags := []string{"id", "this", "is", "used", "for", "testing", "create_date", "update_date"}
+	var expectedValues []interface{}
+	expectedValues = append(expectedValues, id, "yo", "are", int32(1), float32(2.0), int64(123456789), now, now)
+
+	gotTags, gotValues := GetNestedTagsAndValues(createStruct(id, now), "db", nil, nil)
+	if (len(gotTags) != len(expectedTags)) || (len(gotValues) != len(expectedValues)) {
+		t.Fatalf("GetNestedTagsAndValues() = %v, %v, want %v %v", gotTags, gotValues, expectedTags, expectedValues)
+	}
+
+	for i := range gotTags {
+		if (gotTags[i] != expectedTags[i]) || (gotValues[i] != expectedValues[i]) {
+			fmt.Println(gotTags[i], expectedTags[i], gotValues[i], expectedValues[i])
+			t.Fatalf("GetNestedTagsAndValues() = %v, %v, want %v %v", gotTags, gotValues, expectedTags, expectedValues)
+		}
+	}
+}
+
+func TestGetNestedTagsAndValuesForDBAndIgnoreCertainFields(t *testing.T) {
+	id := uuid.NewV4()
+	now := time.Now()
+
+	expectedTags := []string{"id", "this", "is", "for", "testing", "update_date"}
+	var expectedValues []interface{}
+	expectedValues = append(expectedValues, id, "yo", "are", float32(2.0), int64(123456789), now)
+
+	gotTags, gotValues := GetNestedTagsAndValues(createStruct(id, now), "db", []string{"used", "create_date"}, nil)
+	if (len(gotTags) != len(expectedTags)) || (len(gotValues) != len(expectedValues)) {
+		t.Fatalf("GetNestedTagsAndValues() = %v, %v, want %v %v", gotTags, gotValues, expectedTags, expectedValues)
+	}
+
+	for i := range gotTags {
+		if (gotTags[i] != expectedTags[i]) || (gotValues[i] != expectedValues[i]) {
+			fmt.Println(gotTags[i], expectedTags[i], gotValues[i], expectedValues[i])
+			t.Fatalf("GetNestedTagsAndValues() = %v, %v, want %v %v", gotTags, gotValues, expectedTags, expectedValues)
+		}
+	}
+}
+
+func TestGetNestedTagsAndValuesForJSON(t *testing.T) {
+	id := uuid.NewV4()
+	now := time.Now()
+
+	expectedTags := []string{"ID", "This", "is", "used", "for", "testing", "create_date", "update_date"}
+	var expectedValues []interface{}
+	expectedValues = append(expectedValues, id, "yo", "are", int32(1), float32(2.0), int64(123456789), now, now)
+
+	gotTags, gotValues := GetNestedTagsAndValues(createStruct(id, now), "json", nil, nil)
+	if (len(gotTags) != len(expectedTags)) || (len(gotValues) != len(expectedValues)) {
+		t.Fatalf("GetNestedTagsAndValues() = %v, %v, want %v %v", gotTags, gotValues, expectedTags, expectedValues)
+	}
+
+	for i := range gotTags {
+		if (gotTags[i] != expectedTags[i]) || (gotValues[i] != expectedValues[i]) {
+			fmt.Println(gotTags[i], expectedTags[i], gotValues[i], expectedValues[i])
+			t.Fatalf("GetNestedTagsAndValues() = %v, %v, want %v %v", gotTags, gotValues, expectedTags, expectedValues)
+		}
+	}
+}
+
+func TestGetNestedTagsAndValuesForJSONWithNestedStructAndIgnoreCertainFields(t *testing.T) {
 	id := uuid.NewV4()
 	now := time.Now()
 
@@ -200,20 +221,20 @@ func TestGetTagsAndValuesForJSONWithNestedStructAndIgnoreCertainFields(t *testin
 	expectedValues = append(expectedValues, id, "i", "am", int32(2), float32(3.0), int64(987654321),
 		id, "yo", "are", float32(2.0), int64(123456789), now, now)
 
-	gotTags, gotValues := GetTagsAndValues(createNestedStruct(id, now), "json", []string{"used", "create_date", "create_date2"}, []string{"ForTesting"})
+	gotTags, gotValues := GetNestedTagsAndValues(createNestedStruct(id, now), "json", []string{"used", "create_date", "create_date2"}, []string{"ForTesting"})
 	if (len(gotTags) != len(expectedTags)) || (len(gotValues) != len(expectedValues)) {
-		t.Fatalf("GetTagsAndValues() = %v, %v, want %v %v", gotTags, gotValues, expectedTags, expectedValues)
+		t.Fatalf("GetNestedTagsAndValues() = %v, %v, want %v %v", gotTags, gotValues, expectedTags, expectedValues)
 	}
 
 	for i := range gotTags {
 		if (gotTags[i] != expectedTags[i]) || (gotValues[i] != expectedValues[i]) {
 			fmt.Println(gotTags[i], expectedTags[i], gotValues[i], expectedValues[i])
-			t.Fatalf("GetTagsAndValues() = %v, %v, want %v %v", gotTags, gotValues, expectedTags, expectedValues)
+			t.Fatalf("GetNestedTagsAndValues() = %v, %v, want %v %v", gotTags, gotValues, expectedTags, expectedValues)
 		}
 	}
 }
 
-func TestGetTagsAndValuesForJSONWithNestedStruct(t *testing.T) {
+func TestGetNestedTagsAndValuesForJSONWithNestedStruct(t *testing.T) {
 	id := uuid.NewV4()
 	now := time.Now()
 
@@ -223,15 +244,15 @@ func TestGetTagsAndValuesForJSONWithNestedStruct(t *testing.T) {
 	expectedValues = append(expectedValues, id, "i", "am", int32(2), float32(3.0), int64(987654321),
 		id, "yo", "are", int32(1), float32(2.0), int64(123456789), now, now, now, now)
 
-	gotTags, gotValues := GetTagsAndValues(createNestedStruct(id, now), "json", nil, []string{"ForTesting"})
+	gotTags, gotValues := GetNestedTagsAndValues(createNestedStruct(id, now), "json", nil, []string{"ForTesting"})
 	if (len(gotTags) != len(expectedTags)) || (len(gotValues) != len(expectedValues)) {
-		t.Fatalf("GetTagsAndValues() = %v, %v, want %v %v", gotTags, gotValues, expectedTags, expectedValues)
+		t.Fatalf("GetNestedTagsAndValues() = %v, %v, want %v %v", gotTags, gotValues, expectedTags, expectedValues)
 	}
 
 	for i := range gotTags {
 		if (gotTags[i] != expectedTags[i]) || (gotValues[i] != expectedValues[i]) {
 			fmt.Println(gotTags[i], expectedTags[i], gotValues[i], expectedValues[i])
-			t.Fatalf("GetTagsAndValues() = %v, %v, want %v %v", gotTags, gotValues, expectedTags, expectedValues)
+			t.Fatalf("GetNestedTagsAndValues() = %v, %v, want %v %v", gotTags, gotValues, expectedTags, expectedValues)
 		}
 	}
 }

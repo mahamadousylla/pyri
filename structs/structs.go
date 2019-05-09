@@ -19,9 +19,25 @@ func GetTags(src interface{}, tagName string, tagsToIgnore []string) []string {
 }
 
 // GetTagsAndValues: given the tag name to look for,
+// the tags the exclude and returns all the tags and values on a struct
+func GetTagsAndValues(src interface{}, tagName string, tagsToIgnore []string) ([]string, []interface{}) {
+	d := map[string]bool{}
+	for _, s := range tagsToIgnore {
+		d[s] = true
+	}
+
+	t := reflect.TypeOf(src).Elem()
+
+	tags := getTags(t, tagName, d)
+	values := getValues(src, tagName, d)
+
+	return tags, values
+}
+
+// GetNestedTagsAndValues: given the tag name to look for,
 // the tags the exclude and the name of all nested structs,
 // returns all the tags and values on a struct
-func GetTagsAndValues(src interface{}, tagName string, tagsToIgnore, nestedStructNames []string) ([]string, []interface{}) {
+func GetNestedTagsAndValues(src interface{}, tagName string, tagsToIgnore, nestedStructNames []string) ([]string, []interface{}) {
 	d := map[string]bool{}
 	for _, s := range tagsToIgnore {
 		d[s] = true
@@ -35,7 +51,7 @@ func GetTagsAndValues(src interface{}, tagName string, tagsToIgnore, nestedStruc
 	t := reflect.TypeOf(src).Elem()
 
 	tags := getTags(t, tagName, d)
-	values := getValues(src, tagName, d, n)
+	values := getNestedValues(src, tagName, d, n)
 
 	return tags, values
 }
@@ -63,7 +79,25 @@ func getTags(t reflect.Type, tagName string, d map[string]bool) []string {
 	return result
 }
 
-func getValues(src interface{}, tagName string, d map[string]bool, n map[string]bool) []interface{} {
+func getValues(src interface{}, tagName string, d map[string]bool) []interface{} {
+	var result []interface{}
+
+	fields := fstructs.Fields(src)
+
+	for _, field := range fields {
+		tag := field.Tag(tagName)
+		if _, ok := d[tag]; ok {
+			continue
+		}
+
+		k := field.Value()
+		result = append(result, k)
+	}
+
+	return result
+}
+
+func getNestedValues(src interface{}, tagName string, d map[string]bool, n map[string]bool) []interface{} {
 	var result []interface{}
 
 	fields := fstructs.Fields(src)
@@ -77,7 +111,7 @@ func getValues(src interface{}, tagName string, d map[string]bool, n map[string]
 		k := field.Value()
 
 		if _, ok := n[reflect.TypeOf(k).Name()]; ok {
-			result = append(result, getValues(k, tagName, d, n)...)
+			result = append(result, getNestedValues(k, tagName, d, n)...)
 		} else {
 			result = append(result, k)
 		}
