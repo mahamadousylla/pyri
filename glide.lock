@@ -1,16 +1,16 @@
 hash: b50e9c5bca34e053c0c78ca9ffa305611ce566add3fbe5cbfbb0a6b0c8c50679
-updated: 2019-05-06T18:00:49.003767-07:00
+updated: 2019-05-09T00:36:36.061423-07:00
 imports:
 - name: github.com/fatih/structs
   version: 4966fc68f5b7593aafa6cbbba2d65ec6e1416047
 - name: github.com/go-zoo/bone
   version: d7ce1372afa7a4319e9b84ab08593d1342a8c10a
 - name: github.com/konsorten/go-windows-terminal-sequences
-  version: 5c8c8bd35d3832f5d134ae1e1e375b69a4d25242
+  version: f55edac94c9bbba5d6182a4be46d86a2c9b5b50e
 - name: github.com/sirupsen/logrus
   version: 8bdbc7bcc01dcbb8ec23dc8a28e332258d25251f
 - name: golang.org/x/sys
-  version: 7ae0202eb74c2b534255c71b5a15fa4115aabbcc
+  version: 2d0786266e9cd132da844109aa05016f11f3df28
   subpackages:
   - unix
 testImports:

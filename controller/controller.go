@@ -10,13 +10,14 @@ import (
 
 const fileName = "controller.go"
 
+// Controller ...
 type Controller struct {
 	rw  http.ResponseWriter
 	req *http.Request
 	Ctx context.Context
 }
 
-// NewController ...
+// New ...
 func New(rw http.ResponseWriter, req *http.Request) Controller {
 	return Controller{
 		rw:  rw,
@@ -25,7 +26,7 @@ func New(rw http.ResponseWriter, req *http.Request) Controller {
 	}
 }
 
-// ServiceResponse ...
+// WriteResponse ...
 func (c *Controller) WriteResponse(statusCode int, response interface{}) {
 	acceptedType := c.req.Header.Get("Accept")
 
